@@ -361,7 +361,11 @@ gemini.text = "GEMINI 2.5"
           chatContainer.appendChild(botMessage);
           chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll after adding placeholder
           fetch(
+<<<<<<< HEAD
             "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + localStorage.getItem("what"),
+=======
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=",
+>>>>>>> f7c60d48b334fcc916083b572c0538d431715075
             {
               method: "POST",
               headers: {
