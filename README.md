@@ -1,2 +1,4 @@
-# AI-chatbot-bookmarklet-verion
-THIS IS STILL IN BETA AND PLEASE USE RESPONSIBLY currently use geminis https api 
+# BOOKMARKLET AI
+
+
+Bookmarklet AI is a bookmarklet that, when clicked, injects a chatbot interface into the current webpage, allowing you to interact with an AI assistant without any special website integration.
