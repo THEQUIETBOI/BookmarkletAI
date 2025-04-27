@@ -6,6 +6,7 @@ Bookmarklet AI is a bookmarklet that, when clicked, injects a chatbot interface 
 # Features
 - Model Configuration
 - Moveable and Resizable
+- Chatbot Interface
 
 # Current AI models supported
 
