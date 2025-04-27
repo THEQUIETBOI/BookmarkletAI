@@ -1,3 +1,4 @@
+
 function init() {
   const mainContainer = document.createElement('div');
   mainContainer.className = 'main-container';
@@ -31,11 +32,93 @@ function init() {
   model.className = 'model';
   settingsContainer.appendChild(model);
 
-  const gemini = document.createElement('option');
-  gemini.className = 'model';
-gemini.text = "GEMINI 2.5"
-  model.appendChild(gemini);
+ const config = document.createElement('div');
+  config.className = 'config';
+  settingsContainer.appendChild(config);
 
+  const tempdiv = document.createElement('div');
+  tempdiv.id = 'rangeslides';
+  settingsContainer.appendChild(tempdiv);
+
+
+ const temptext = document.createElement('h3');
+  temptext.id = 'opttext';
+  temptext.innerHTML = "Temperature"
+  tempdiv.appendChild(temptext);
+
+
+  const temprange = document.createElement('input');
+  temprange.className  = "temprange"
+  temprange.type = 'range';
+  temprange.min = '0';
+  temprange.max = '2';
+  temprange.step = '0.05'
+  tempdiv.appendChild(temprange);
+
+
+  const temperaturenum = document.createElement('input');
+  temperaturenum.id  = "nums"
+  temperaturenum.type = 'number';
+  tempdiv.appendChild(temperaturenum);
+
+const outdiv = document.createElement("div");
+outdiv.id = "rangeslides";
+settingsContainer.appendChild(outdiv);
+
+const outtext = document.createElement('h3');
+outtext.id = 'opttext';
+outtext.innerHTML = "Output Length"
+outdiv.appendChild(outtext);
+
+const outputlengthdiv = document.createElement('input');
+outputlengthdiv.id = "nums"
+outputlengthdiv.type = "number"
+outputlengthdiv.value = "65536"
+outputlengthdiv.placeholder = "OUTPUT LENGTH"
+outdiv.appendChild(outputlengthdiv);
+
+  const ks = document.createElement('div');
+ks.id = "rangeslides"
+settingsContainer.appendChild(ks);
+
+const topktext = document.createElement('h3');
+topktext.id = 'opttext';
+topktext.innerHTML = "Top K"
+ks.appendChild(topktext);
+
+
+const topk = document.createElement('input');
+topk.type = "range"
+topk.value = "0.95"
+topk.min = '0';
+topk.max = '1';
+topk.step = '0.05'
+ks.appendChild(topk);
+
+
+const topknum = document.createElement('input');
+topknum.id  = "nums"
+topknum.type = 'number';
+ks.appendChild(topknum);
+
+fetch("https://generativelanguage.googleapis.com/v1beta/models?key="+ localStorage.getItem("what"))
+  .then(response => response.json())
+  .then(data => {
+    data.models.forEach(modelo => {
+      const option = document.createElement('option');
+      const text = modelo.name.split("models/")[1]
+      option.value = text;
+      option.textContent = text;
+      model.appendChild(option);
+      model.selectedIndex = localStorage.getItem("");
+      model.selectedIndex = 23
+    })
+    
+localStorage.setItem("models", JSON.stringify(data.models))
+
+  })
+
+ 
 
   const close = document.createElement('button');
   close.className = 'close-button';
@@ -90,7 +173,29 @@ gemini.text = "GEMINI 2.5"
   close.onclick = () => {
       settingsPage.style.visibility = "hidden";
   }
-  
+
+model.oninput = () => {
+const list = localStorage.getItem("models");
+const parsedList = JSON.parse(list);
+const selectedModel = parsedList[model.selectedIndex];
+
+temperaturenum.value  = selectedModel.temperature;
+temprange.value = selectedModel.temperature;
+console.log(selectedModel.outputTokenLimit)
+outputlengthdiv.value = selectedModel.outputTokenLimit;
+outputlengthdiv.max = selectedModel.outputTokenLimit;
+
+}
+
+  temprange.oninput = () => {
+    temperaturenum.value  = temprange.value
+
+  }
+
+  topk.oninput = () => {
+    topknum.value  = topk.value
+
+  }
   stylesheet.innerHTML = `
     :host {
       background-color: #3d425c;
@@ -98,19 +203,59 @@ gemini.text = "GEMINI 2.5"
       right: 0;
       bottom: 0;
       width: 300px;
-      min-width: 300px;
+      min-width: 350px;
       max-width: 1000px;
       height: 410px;
-      min-height: 200px;
+      min-height: 250px;
       border: 1px solid #ccc;
       border-radius: 5%;
       z-index: 1000;
       display: flex;
       flex-direction: column;
       overflow-y: auto;
+      overflow-x: hidden;
       resize: both;
     }
   
+    
+  
+
+#opttext {
+margin: 0;
+padding: 10px;
+}
+  
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none; /* Chrome, Safari, Edge */
+  margin: 0;
+}
+
+    #nums {
+    width: 30%;
+    background-color: gray;
+    color:white;
+    margin:0;
+    text-align: center;
+    }
+  
+    #rangeslides{
+    text-align: center;
+    margin:0;
+    color: white;
+    }
+
+
+
+     .outs{
+    text-align: left;
+    margin:0;
+    color: white;
+    font-size: 17px;
+
+    }
+    
     .buttons-container {
       background-color: rgb(78, 78, 78);
       width: 100%;
@@ -130,6 +275,9 @@ gemini.text = "GEMINI 2.5"
       box-sizing: border-box;
       padding: 10px;
       margin-top: 25px;
+      scrollbar-color:rgb(83, 90, 126) transparent;
+scrollbar-gutter: stable;
+
     }
   
     .botMessage,
@@ -149,7 +297,7 @@ gemini.text = "GEMINI 2.5"
   
   
     .me-container {
-      height: 20px;
+      height: 100px;
       background-color: #3d425c;
       box-sizing: border-box;
       padding: 5px;
@@ -201,7 +349,9 @@ gemini.text = "GEMINI 2.5"
       background-color: rgb(46, 46, 46);
       width: 100%;
       height: 60%;
+      margin-top: 36px;
       visibility: hidden;
+      overflow-y: auto;
     }
   
     .settings-content {
@@ -210,6 +360,7 @@ gemini.text = "GEMINI 2.5"
       padding-top: 50px;
       padding-left: 20px;
       font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
     }
   
     .settings-container {
@@ -219,6 +370,8 @@ gemini.text = "GEMINI 2.5"
       justify-content: center;
       align-items: center;
       margin: 60px;
+            overflow-y scroll;
+
     }
   
     .custom-file-upload {
@@ -361,11 +514,7 @@ gemini.text = "GEMINI 2.5"
           chatContainer.appendChild(botMessage);
           chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll after adding placeholder
           fetch(
-<<<<<<< HEAD
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + localStorage.getItem("what"),
-=======
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=",
->>>>>>> f7c60d48b334fcc916083b572c0538d431715075
+            "https://generativelanguage.googleapis.com/v1beta/models/"+ model.value +":generateContent?key=" + localStorage.getItem("what"),
             {
               method: "POST",
               headers: {
@@ -376,11 +525,18 @@ gemini.text = "GEMINI 2.5"
                   parts: [{ text: Prompt.value }]
                 },
 
-                contents: [
+                contents: 
                   {
                     parts: [{ text: userInput }]
-                  }
-                ]
+                  },
+                 
+                generationConfig: {
+                  temperature: temprange.value,
+                  maxOutputTokens: outputlengthdiv.value,
+                  topK: topk.value
+
+                }
+
               })
             }
           )
@@ -447,9 +603,10 @@ localStorage.setItem("what", apiKey.value)
       }
     };
 
-    Prompt.onchange = () => {
-      alert("updated prompt");
-    };
+    
+
+  
+    
   });
 }
 
