@@ -15,4 +15,7 @@ Bookmarklet AI is a bookmarklet that, when clicked, injects a chatbot interface 
 
 # HOW DO I SETUP THE CHATBOT AND BE ABLE TO USE IT?
 
-- STEPS COMING SOON
+# 1. Go to https://aistudio.google.com
+# 2. Go to Get API key
+# 3. Press Create API KEY and copy to clipboard
+# 4. run the bookmarklet and press ⚙️ to go to settings menu and insert api key in text labelled "API KEY HERE"
