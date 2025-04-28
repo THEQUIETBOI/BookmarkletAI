@@ -1,5 +1,107 @@
 
-function init() {
+
+
+function makeDraggable(element, handle) {
+    let isDragging = false;
+    let offsetX, offsetY;
+  
+    function handlePointerDown(e) {
+      e.preventDefault(); // Prevent default touch behavior (scrolling)
+      isDragging = true;
+  
+      const isTouch = e.type === "touchstart";
+      const event = isTouch ? e.touches[0] : e; // Use touches for touch events
+  
+      offsetX = event.clientX - element.offsetLeft;
+      offsetY = event.clientY - element.offsetTop;
+  
+      document.addEventListener("mousemove", handlePointerMove);
+      document.addEventListener("touchmove", handlePointerMove);
+      document.addEventListener("mouseup", handlePointerUp);
+      document.addEventListener("touchend", handlePointerUp);
+      document.addEventListener("mouseleave", handlePointerUp); // Important!
+    }
+  
+    function handlePointerMove(e) {
+      if (!isDragging) return;
+  
+      const isTouch = e.type === "touchmove";
+      const event = isTouch ? e.touches[0] : e;
+  
+      const x = event.clientX - offsetX;
+      const y = event.clientY - offsetY;
+  
+      element.style.left = `${x}px`;
+      element.style.top = `${y}px`;
+    }
+  
+    function handlePointerUp() {
+      isDragging = false;
+      document.removeEventListener("mousemove", handlePointerMove);
+      document.removeEventListener("touchmove", handlePointerMove);
+      document.removeEventListener("mouseup", handlePointerUp);
+      document.removeEventListener("touchend", handlePointerUp);
+      document.removeEventListener("mouseleave", handlePointerUp);
+    }
+  
+    // Attach listeners to the specified handle element
+    handle.addEventListener("mousedown", handlePointerDown);
+    handle.addEventListener("touchstart", handlePointerDown);
+  
+      element.style.position = 'fixed'; // Important: Must be positioned!
+      element.style.cursor = 'grab'; // Initial cursor style
+      handle.style.cursor = 'grab'; // Initial cursor style for handle
+  
+  }
+
+  function sendMessage(user, text) {
+    const main = document.getElementById("main-container");
+  if(!main || !main.shadowRoot){
+  console.log("main or shadow root not found")
+  return
+  }
+  const chat = main.shadowRoot.getElementById("chat-container");
+  
+  
+      // Check if the element exists before attempting to append a child.
+      if (chat) {
+        const message = document.createElement("p");
+        message.className = "userMessage";
+        message.innerHTML = user + ":  " + text;
+        chat.appendChild(message);
+      } else {
+        console.error("Element with id 'chat-container' not found in shadow root.");
+      }
+    }
+
+function sendMessagepro() {
+  const main = document.getElementById("main-container");
+if(!main || !main.shadowRoot){
+console.log("main or shadow root not found")
+return
+}
+const chat = main.shadowRoot.getElementById("chat-container");
+
+
+    // Check if the element exists before attempting to append a child.
+    if (chat) {
+      const message = document.createElement("p");
+      message.className = "userMessage";
+      message.innerHTML = "Bot" + ":  " + "Is Thinking...";
+      chat.appendChild(message);
+      return message
+    } else {
+      console.error("Element with id 'chat-container' not found in shadow root.");
+    }
+  }
+
+  function removeBotThinking(thinkingElement) {
+    if (thinkingElement && thinkingElement.parentNode) {
+      thinkingElement.remove();
+    }
+  }
+
+function init(){
   const mainContainer = document.createElement('div');
   mainContainer.className = 'main-container';
   mainContainer.id = 'main-container';
@@ -31,6 +133,11 @@ function init() {
   const model = document.createElement('select');
   model.className = 'model';
   settingsContainer.appendChild(model);
+
+  const test = document.createElement('option');
+  test.innerHTML = "Select Model Here";
+  model.appendChild(test);
+
 
  const config = document.createElement('div');
   config.className = 'config';
@@ -101,22 +208,6 @@ topknum.id  = "nums"
 topknum.type = 'number';
 ks.appendChild(topknum);
 
-fetch("https://generativelanguage.googleapis.com/v1beta/models?key="+ localStorage.getItem("what"))
-  .then(response => response.json())
-  .then(data => {
-    data.models.forEach(modelo => {
-      const option = document.createElement('option');
-      const text = modelo.name.split("models/")[1]
-      option.value = text;
-      option.textContent = text;
-      model.appendChild(option);
-      model.selectedIndex = localStorage.getItem("");
-      model.selectedIndex = 23
-    })
-    
-localStorage.setItem("models", JSON.stringify(data.models))
-
-  })
 
  
 
@@ -129,9 +220,12 @@ localStorage.setItem("models", JSON.stringify(data.models))
   buttonContainer.className = 'buttons-container';
   shadowRoot.appendChild(buttonContainer); // Append to shadowRoot
   
+  makeDraggable(mainContainer, buttonContainer)
   
   const chatContainer = document.createElement('div');
   chatContainer.className = 'chat-container';
+  chatContainer.id = 'chat-container';
+
   shadowRoot.appendChild(chatContainer); // Append to shadowRoot
   
   
@@ -280,7 +374,7 @@ scrollbar-gutter: stable;
 
     }
   
-    .botMessage,
+    
     .userMessage {
       color: rgb(255, 255, 255);
       font-weight: 600;
@@ -408,206 +502,147 @@ scrollbar-gutter: stable;
     }
   `;
 
- 
+  ChatInput.addEventListener("keypress", (key) => {
+    if(key.key === "Enter"){
+      sendMessage("You", ChatInput.value);
+input("gemini-2.0-flash", localStorage.getItem('what'), Prompt.value, temprange.value, ChatInput.value);
+      ChatInput.value = "";
 
-  function makeDraggable(element, handle) {
-    let isDragging = false;
-    let offsetX, offsetY;
-  
-    function handlePointerDown(e) {
-      e.preventDefault(); // Prevent default touch behavior (scrolling)
-      isDragging = true;
-  
-      const isTouch = e.type === "touchstart";
-      const event = isTouch ? e.touches[0] : e; // Use touches for touch events
-  
-      offsetX = event.clientX - element.offsetLeft;
-      offsetY = event.clientY - element.offsetTop;
-  
-      document.addEventListener("mousemove", handlePointerMove);
-      document.addEventListener("touchmove", handlePointerMove);
-      document.addEventListener("mouseup", handlePointerUp);
-      document.addEventListener("touchend", handlePointerUp);
-      document.addEventListener("mouseleave", handlePointerUp); // Important!
     }
-  
-    function handlePointerMove(e) {
-      if (!isDragging) return;
-  
-      const isTouch = e.type === "touchmove";
-      const event = isTouch ? e.touches[0] : e;
-  
-      const x = event.clientX - offsetX;
-      const y = event.clientY - offsetY;
-  
-      element.style.left = `${x}px`;
-      element.style.top = `${y}px`;
-    }
-  
-    function handlePointerUp() {
-      isDragging = false;
-      document.removeEventListener("mousemove", handlePointerMove);
-      document.removeEventListener("touchmove", handlePointerMove);
-      document.removeEventListener("mouseup", handlePointerUp);
-      document.removeEventListener("touchend", handlePointerUp);
-      document.removeEventListener("mouseleave", handlePointerUp);
-    }
-  
-    // Attach listeners to the specified handle element
-    handle.addEventListener("mousedown", handlePointerDown);
-    handle.addEventListener("touchstart", handlePointerDown);
-  
-      element.style.position = 'fixed'; // Important: Must be positioned!
-      element.style.cursor = 'grab'; // Initial cursor style
-      handle.style.cursor = 'grab'; // Initial cursor style for handle
-  
-  }
-  
-  
-  
-  // Example usage (assuming you have elements with these IDs):
-  const mainContainers = document.getElementById("main-container");
-  const buttonContainers = document.getElementById("button-container"); // Your "handle"
-  
-  if (mainContainer && buttonContainer) {
-    makeDraggable(mainContainer, buttonContainer);
-  }
-  
-  
-  // For multiple elements with classes:
-  const containers = document.querySelectorAll('.main-container');
-  const handles = document.querySelectorAll('.button-container'); // Or a different class for handles
-  
-  containers.forEach((container, index) => {
-      if (handles[index]) { // Ensure a handle exists for each container
-          makeDraggable(container, handles[index]);
-      } else {
-          console.warn("No handle found for container", container);
-      }
-  });
+  })
 
-  const hide = document.getElementById("main-container");
-  const ChatInputs = document.querySelectorAll('.chat-input'); // Assign ChatInput to the element with class "chat-input"
-  document.addEventListener("keydown", (e) => {
-    if (e.key.toLowerCase() === "]") {
-      if (document.activeElement !== ChatInputs) {
-        mainContainer.classList.toggle("hidden");
-      } 
-    }
-
-    ChatInput.addEventListener("keydown", async (e) => {
-      if (e.key === "Enter") {
-        const userInput = ChatInput.value.trim(); // Store and trim user input
-
-        if (userInput !== "") {
-          ChatInput.value = ""; // Clear input immediately
-
-          const userMessage = document.createElement("p");
-          userMessage.className = "userMessage";
-          userMessage.textContent = "You: " + userInput;
-          chatContainer.appendChild(userMessage);
-          chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll immediately after adding user message
-
-          const botMessage = document.createElement("p"); // Create bot message element *before* the API call
-          botMessage.className = "botMessage";
-          botMessage.textContent = "Bot: Thinking..."; // Indicate that the bot is processing
-          chatContainer.appendChild(botMessage);
-          chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll after adding placeholder
-          fetch(
-            "https://generativelanguage.googleapis.com/v1beta/models/"+ model.value +":generateContent?key=" + localStorage.getItem("what"),
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify({
-                system_instruction: {
-                  parts: [{ text: Prompt.value }]
-                },
-
-                contents: 
-                  {
-                    parts: [{ text: userInput }]
-                  },
-                 
-                generationConfig: {
-                  temperature: temprange.value,
-                  maxOutputTokens: outputlengthdiv.value,
-                  topK: topk.value
-
-                }
-
-              })
-            }
-          )
-            .then((response) => response.json())
-            .then((data) => {
-              chatContainer.removeChild(botMessage);
-              if (
-                data.candidates &&
-                data.candidates.length > 0 &&
-                data.candidates[0].content
-              ) {
-                const botResponse = data.candidates[0].content.parts[0].text
-                  .toString()
-                  .trim();
-                const botMessage = document.createElement("p");
-                botMessage.className = "botMessage";
-                const parsedResponse = marked.parse(botResponse);
-
-               
-                {
-                  botMessage.innerHTML = "Bot: " + parsedResponse;
-                  console.log("not found");
-                }
-
-                chatContainer.appendChild(botMessage);
-                ChatInput.value = ""; // Clear input
-                chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to bottom
-              } else {
-                // Handle cases where the API doesn't return a valid response
-                alert(console.error("Invalid API response:", data));
-
-                const errorMessage = document.createElement("p");
-                errorMessage.className = "botMessage error";
-                errorMessage.textContent = "Error: Could not get a response.";
-                chatContainer.appendChild(errorMessage);
-                ChatInput.value = "";
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-              }
-            })
-            .catch((error) => {
-              console.error("API request failed:", error);
-              const errorMessage = document.createElement("p");
-              errorMessage.className = "botMessage error";
-              errorMessage.textContent = "Error: API request failed.";
-              chatContainer.appendChild(errorMessage);
-              ChatInput.value = "";
-              chatContainer.scrollTop = chatContainer.scrollHeight;
-            });
-        }
-      }
-    });
-
-    apiKey.onchange = () => {
-      alert("updated key");
-localStorage.setItem("what", apiKey.value)
-      if (localStorage.getItem("what")) {
-        // Key already exists, update it
-        localStorage.setItem("what", apiKey.value);
-        console.log("API key updated in localStorage.");
-      } else {
-        // Key doesn't exist, create it
-        localStorage.setItem("what", apiKey.value);
-        console.log("API key created in localStorage.");
-      }
-    };
-
-    
-
-  
-    
-  });
 }
 
-init();
+function getmodels() {
+  return fetch("https://generativelanguage.googleapis.com/v1beta/models?key=" + localStorage.getItem("what"))
+    .then(response => {
+      if (response.status === 200) {
+        return response.json(); // Return the Promise of the JSON data
+      } else {
+        console.log("failed to get models", response.status);
+        return null; // Or you could return a rejected Promise here: Promise.reject(new Error(`Failed to fetch models: ${response.status}`));
+      }
+    })
+    .then(data => {
+      if (data) {
+        const datas = JSON.stringify(data);
+        return datas; // Return the stringified data
+      } else {
+        return null; // Or handle the case where data is null
+      }
+    })
+    .catch(err => {
+      console.error("Error fetching models:", err);
+      return null; // Or return a rejected Promise: Promise.reject(err);
+    });
+}
+
+// How to use the getmodels function:
+getmodels()
+  .then(modelsData => {
+    if (modelsData) {
+      console.log("Fetched models data:", modelsData);
+      // Now you can work with the modelsData
+    } else {
+      console.log("Failed to retrieve models data.");
+    }
+  });
+
+
+
+  async function input(model, key, prompt, temperature, userinput) {
+    const think = sendMessagepro();
+    let parts = [{ text: userinput }];
+  
+    // Get the uploaded file data from the event listener in init
+    const mainContainer = document.getElementById("main-container");
+    let fileData = null;
+    if (mainContainer && mainContainer.shadowRoot) {
+      const fileInput = mainContainer.shadowRoot.querySelector('.custom-file-upload');
+      if (fileInput && fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        try {
+          const reader = new FileReader();
+          const fileDataPromise = new Promise((resolve, reject) => {
+            reader.onload = (e) => {
+              resolve(e.target.result);
+            };
+            reader.onerror = (error) => {
+              reject(error);
+            };
+            reader.readAsDataURL(file); // Or reader.readAsText(file)
+          });
+          fileData = await fileDataPromise;
+          parts.push({ file_data: fileData }); // Add file data as a new part
+        } catch (error) {
+          console.error("Error reading file:", error);
+        }
+      }
+    }
+  
+    const reply = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        system_instruction: {
+          parts: {
+            text: prompt
+          }
+        },
+        contents: {
+          parts: parts // Use the array of parts
+        },
+        generation_config: {
+          temperature: temperature,
+        }
+      })
+    })
+    .then(async response => {
+      if (!response.ok) {
+        console.log("uh oh", response.status);
+        removeBotThinking(think);
+        sendMessage("AI", `Error: Request failed with status ${response.status}`);
+        return;
+      }
+      const data = await response.json();
+      if (data) {
+        const text = data.candidates[0].content.parts[0].text;
+        removeBotThinking(think);
+        sendMessage("AI", text);
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      removeBotThinking(think);
+    });
+  }
+  
+  // ... (rest of your code)
+
+
+getmodels();
+
+
+    
+
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", init())
+  
+  
+
+  
+
+
+
+
+
+      
+
+           
