@@ -552,33 +552,7 @@ getmodels()
 
   async function input(model, key, prompt, temperature, userinput) {
     const think = sendMessagepro();
-    let parts = [{ text: userinput }];
-  
-    // Get the uploaded file data from the event listener in init
-    const mainContainer = document.getElementById("main-container");
-    let fileData = null;
-    if (mainContainer && mainContainer.shadowRoot) {
-      const fileInput = mainContainer.shadowRoot.querySelector('.custom-file-upload');
-      if (fileInput && fileInput.files && fileInput.files[0]) {
-        const file = fileInput.files[0];
-        try {
-          const reader = new FileReader();
-          const fileDataPromise = new Promise((resolve, reject) => {
-            reader.onload = (e) => {
-              resolve(e.target.result);
-            };
-            reader.onerror = (error) => {
-              reject(error);
-            };
-            reader.readAsDataURL(file); // Or reader.readAsText(file)
-          });
-          fileData = await fileDataPromise;
-          parts.push({ file_data: fileData }); // Add file data as a new part
-        } catch (error) {
-          console.error("Error reading file:", error);
-        }
-      }
-    }
+    
   
     const reply = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
       method: "POST",
