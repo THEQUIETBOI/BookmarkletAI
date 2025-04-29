@@ -135,7 +135,7 @@ function init(){
   settingsContainer.appendChild(model);
 
   const test = document.createElement('option');
-  test.innerHTML = "Select Model Here";
+  test.innerHTML = "gemini-2.0-flash";
   model.appendChild(test);
 
 
@@ -280,8 +280,15 @@ outputlengthdiv.value = selectedModel.outputTokenLimit;
 outputlengthdiv.max = selectedModel.outputTokenLimit;
 
 }
+apiKey.addEventListener("keydown", (e) => {  
+if (e.key === "Enter"){
+  localStorage.setItem("what", apiKey.value);
+  alert("API KEY SET: "+ localStorage.getItem("what"));
+}
 
-  temprange.oninput = () => {
+})
+
+temprange.oninput = () => {
     temperaturenum.value  = temprange.value
 
   }
@@ -566,7 +573,9 @@ getmodels()
           }
         },
         contents: {
-          parts: parts // Use the array of parts
+          parts: {
+            text: userinput
+          } // Use the array of parts
         },
         generation_config: {
           temperature: temperature,
