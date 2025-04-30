@@ -2,7 +2,7 @@
 function makeDraggable(element, handle) {
   let isDragging = false;
   let offsetX, offsetY;
-
+  
   function handlePointerDown(e) {
     e.preventDefault(); // Prevent default touch behavior (scrolling)
     isDragging = true;
@@ -654,9 +654,41 @@ scrollbar-gutter: stable;
 }
 
 // How to use the getmodels function
-
-async function input(model, key, prompt, temperature, userinput) {
+async function input(model, key, prompt, temperature, userinput, file) {
   const think = sendMessagepro();
+
+
+
+
+}
+const bodyrequest = {
+        system_instruction: {
+          parts: [{
+            text: prompt
+          }]
+        },
+        contents: {
+          parts: [{
+            text: userinput
+          }] // Use the array of parts
+        },
+        generation_config: {
+          temperature: temperature
+        }
+      }
+
+const fileparam = {
+inline_data: {
+mime_type: file.type,
+data: file
+
+}
+}
+if(file){
+bodyrequest.contents.parts.push(fileparam)
+}
+
+console.log(bodyrequest);
 
   const reply = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`,
@@ -665,21 +697,7 @@ async function input(model, key, prompt, temperature, userinput) {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        system_instruction: {
-          parts: {
-            text: prompt
-          }
-        },
-        contents: {
-          parts: {
-            text: userinput
-          } // Use the array of parts
-        },
-        generation_config: {
-          temperature: temperature
-        }
-      })
+      body: JSON.stringify(bodyrequest)
     }
   )
     .then(async (response) => {
@@ -704,9 +722,6 @@ async function input(model, key, prompt, temperature, userinput) {
       removeBotThinking(think);
     });
 }
+init()
 
-// ... (rest of your code)
-
-init();
-
-getmodels();
+getmodels()
