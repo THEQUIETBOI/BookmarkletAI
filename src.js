@@ -1295,5 +1295,3 @@ async function input(
 init();
 
 
-// Fetch models after initialization (or based on API key presence)
-// getmodels(); // Called inside init now based on key presence
