@@ -1,39 +1,35 @@
 # BOOKMARKLET AI
 
+**Bookmarklet AI** is a lightweight bookmarklet that deploys a chatbot interface directly into any webpage. Interact with an AI assistant without needing special website integration.
 
-Bookmarklet AI is a bookmarklet that, when clicked, deploys a chatbot interface into the current webpage, allowing you to interact with an AI assistant without any special website integration.
+---
 
-# Features
-- Model Configuration
-- Moveable and Resizable
-- Chatbot Interface
+## Features
 
-# Current AI models supported
+- Drag-and-drop, resizable AI chat window  
+- Upload files (images, PDFs, text) for AI to read  
+- Markdown and code formatting in responses  
+- Easy model selection and settings customization  
 
+---
 
-✅GEMINI API
+## Current AI Models Supported
 
-- MORE COMING SOON
+✅ **GEMINI API**  
 
-# Features
+*More models coming soon…*
 
-Drag-and-drop AI chat anywhere on your screen
+---
 
-Upload files (images, PDFs, text) for AI to read
+## Setup Instructions
 
-Markdown and code formatting in responses
+1. Go to [AI Studio](https://aistudio.google.com)  
+2. Navigate to [API Key Page](https://aistudio.google.com/apikey)  
+3. Click **Create API Key** and copy it to your clipboard  
+4. Run the bookmarklet, click **⚙️ Settings**, and paste your API key into the field labeled **"API KEY HERE"**  
 
-Easy model and settings customization
+---
 
+## ⚠️ Warning
 
-# HOW DO I SETUP THE CHATBOT AND BE ABLE TO USE IT?
-
-1. Go to https://aistudio.google.com
-2. Go to https://aistudio.google.com/apikey
-3. Press Create API KEY and copy to clipboard
-4. run the bookmarklet and press ⚙️ to go to settings menu and insert api key in text labelled "API KEY HERE"
-
-
-
-# ⚠️ Warning ⚠️
-The bookmark should only be ran from a secure website due to storing the API KEY via a domains localstorage and is exposed to that domain and any code or bookmarklets ran. 
+The bookmarklet stores your API key in the website’s `localStorage`, which means it is accessible to that domain and any scripts running on it. Only run the bookmarklet on trusted websites.
