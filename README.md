@@ -1,3 +1,9 @@
+#GOAL
+
+0/10 STARS⭐
+
+
+
 # BOOKMARKLET AI
 
 **Bookmarklet AI** is a lightweight bookmarklet that deploys a chatbot interface directly into any webpage. Interact with an AI assistant without needing special website integration.
