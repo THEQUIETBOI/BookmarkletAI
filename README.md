@@ -15,6 +15,16 @@ Bookmarklet AI is a bookmarklet that, when clicked, deploys a chatbot interface 
 
 - MORE COMING SOON
 
+# Features
+
+Drag-and-drop AI chat anywhere on your screen
+
+Upload files (images, PDFs, text) for AI to read
+
+Markdown and code formatting in responses
+
+Easy model and settings customization
+
 
 # HOW DO I SETUP THE CHATBOT AND BE ABLE TO USE IT?
 
