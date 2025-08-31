@@ -1,6 +1,6 @@
 # GOAL
 
-0/10 STARS⭐
+# 0/10 STARS⭐
 
 
 
